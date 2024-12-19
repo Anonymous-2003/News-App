@@ -272,14 +272,15 @@ export class News extends Component {
 
     static defaultProps = {
         country:'us',
-        pageSize:12,
+        pageSize:9,
         category:'general'
     }
      
     static propTypes = {
-        country: PropTypes.string
-        
-    }
+        country: PropTypes.string,
+        category: PropTypes.string,
+        pageSize: PropTypes.number
+      }
 
   constructor(){
     super();
