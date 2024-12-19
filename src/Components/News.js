@@ -2,7 +2,10 @@ import React, { Component } from 'react'
 import NewsItems from './NewsItems'
 
 export class News extends Component {
-  articles = [{
+
+    /* Method 1 using array */
+
+  articles = [{ // creating array of name articles
     "source": {
         "id": "cnn",
         "name": "CNN"
@@ -263,27 +266,44 @@ export class News extends Component {
     "content": "The Duke of York will not join the rest of the Royal Family for the traditional Christmas gathering in Sandringham, royal sources have told the BBC.\r\nIt is expected that Prince Andrew will \"honourabl… [+3151 chars]"
 }
 ]
+
   constructor(){
     super();
     this.state = {
-      articles: this.articles 
+
+    /*array method:*/  
+    articles: this.articles  // entire contenet of array is inside articles which is before :
+
     };
+  }
+
+  async componentDidMount(){
+    let apiUrl = "https://newsapi.org/v2/top-headlines?country=us&apiKey=d3468b6a9c314118ae192341d8834f26"
+    let data = await fetch(apiUrl) // fetch the apiUrl and store it in variable data
+    let parsedData = await data.json();
+    console.log(parsedData);
+    this.setState({articles:parsedData.articles})
   }
   render() {
     return (
       <div>
           <div className='container my-3'>
             <h2>Headlines</h2>
+
+            {
+
             <div className='row'>
               {
                 this.state.articles .map((element) => {
                   return  <div className='col-md-4' key={element.url}>
-                  <NewsItems title = {element.title} description = {element.description} imgUrl ={element.urlToImage} newsUrl = {element.url}/>
+                  <NewsItems title = {element.title?element.title.slice(0,50):""} description = {element.description?element.description.slice(0,50):""} imgUrl ={element.urlToImage} newsUrl = {element.url}/>
                   </div>
                 })
               }
                            
             </div>
+
+            }
         </div>
       </div>
       
