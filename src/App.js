@@ -6,8 +6,8 @@ import News from './Components/News';
 function App() {
   return (
     <div>
-      <Navbar/>
-      <News/>
+      <Navbar/>;
+      <News country = "us" category = "Science"/>;
     </div>
   );
 }
