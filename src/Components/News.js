@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import NewsItems from './NewsItems'
+import Loading from './Loading';
 
 export class News extends Component {
 
@@ -292,11 +293,14 @@ export class News extends Component {
   prevPage = async ()=>{
  
     let apiUrl = `https://newsapi.org/v2/top-headlines?country=us&apiKey=d3468b6a9c314118ae192341d8834f26&page=${this.state.page -1}&pageSize=9`
+    this.setState({loading:true})
     let data = await fetch(apiUrl) // fetch the apiUrl and store it in variable data
     let parsedData = await data.json();
     this.setState({
         page:this.state.page -1,
-        articles:parsedData.articles })
+        articles:parsedData.articles,
+        loading: false })
+        
   }
   nextPage = async ()=>{
 
@@ -318,12 +322,14 @@ export class News extends Component {
       <div>
           <div className='container my-3'>
             <h2>Headlines</h2>
-
+            {
+                this.state.loading && <Loading/>
+            }
             
 
             <div className='row'>
               {
-                this.state.articles .map((element) => {
+               !this.state.loading && this.state.articles .map((element) => {
                   return  <div className='col-md-4' key={element.url}>
                   <NewsItems title = {element.title?element.title.slice(0,50):""} description = {element.description?element.description.slice(0,50):""} imgUrl ={element.urlToImage} newsUrl = {element.url}/>
                   </div>
