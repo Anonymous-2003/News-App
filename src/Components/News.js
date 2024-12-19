@@ -5,7 +5,7 @@ export class News extends Component {
 
     /* Method 1 using array */
 
-  articles = [{ // creating array of name articles
+ /* articles = [{ // creating array of name articles
     "source": {
         "id": "cnn",
         "name": "CNN"
@@ -266,14 +266,17 @@ export class News extends Component {
     "content": "The Duke of York will not join the rest of the Royal Family for the traditional Christmas gathering in Sandringham, royal sources have told the BBC.\r\nIt is expected that Prince Andrew will \"honourabl… [+3151 chars]"
 }
 ]
-
+*/
   constructor(){
     super();
     this.state = {
 
     /*array method:*/  
-    articles: this.articles  // entire contenet of array is inside articles which is before :
+    // articles: this.articles  // entire contenet of array is inside articles which is before :
 
+    // without using array method
+    articles:[],
+    page:1
     };
   }
 
@@ -282,7 +285,33 @@ export class News extends Component {
     let data = await fetch(apiUrl) // fetch the apiUrl and store it in variable data
     let parsedData = await data.json();
     console.log(parsedData);
-    this.setState({articles:parsedData.articles})
+    this.setState({
+        totalResult:parsedData.totalResults,    
+        articles:parsedData.articles})
+  } 
+  prevPage = async ()=>{
+ 
+    let apiUrl = `https://newsapi.org/v2/top-headlines?country=us&apiKey=d3468b6a9c314118ae192341d8834f26&page=${this.state.page -1}&pageSize=9`
+    let data = await fetch(apiUrl) // fetch the apiUrl and store it in variable data
+    let parsedData = await data.json();
+    this.setState({
+        page:this.state.page -1,
+        articles:parsedData.articles })
+  }
+  nextPage = async ()=>{
+
+    if (this.state.page+1 > Math.ceil(this.state.totalResult/9)) {
+        // if there are no articles left to display on next page, then making next page blank
+    } else {
+        let apiUrl = `https://newsapi.org/v2/top-headlines?country=us&apiKey=d3468b6a9c314118ae192341d8834f26&page=${this.state.page +1}&pageSize=9`
+        let data = await fetch(apiUrl) // fetch the apiUrl and store it in variable data
+        let parsedData = await data.json();
+        this.setState({
+            page:this.state.page+1,
+            articles:parsedData.articles })
+    }
+
+   
   }
   render() {
     return (
@@ -290,7 +319,7 @@ export class News extends Component {
           <div className='container my-3'>
             <h2>Headlines</h2>
 
-            {
+            
 
             <div className='row'>
               {
@@ -302,8 +331,14 @@ export class News extends Component {
               }
                            
             </div>
+            <div className="container d-flex justify-content-between">
+            <button type="button" onClick={this.prevPage} disabled = {this.state.page<=1} className="btn btn-dark my-3">&larr;Previous</button>
+            <button type="button" disabled={this.state.page+1 > Math.ceil(this.state.totalResult/9)} onClick={this.nextPage} className="btn btn-dark my-3">Next&rarr;</button>
+            </div>
 
-            }
+
+
+            
         </div>
       </div>
       
